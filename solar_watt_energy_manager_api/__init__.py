@@ -1,2 +1,0 @@
-from solar_watt_energy_manager_api.EnergyManagerAPI import EnergyManagerAPI
-

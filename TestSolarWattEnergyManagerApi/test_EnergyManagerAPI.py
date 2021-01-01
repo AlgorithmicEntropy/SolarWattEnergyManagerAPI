@@ -1,5 +1,5 @@
 from unittest import TestCase
-import solar_watt_energy_manager_api as api
+import SolarWattEnergyManagerAPI as api
 
 
 class TestEnergyManagerAPI(TestCase):
