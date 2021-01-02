@@ -1,8 +1,8 @@
-import SolarWattEnergyManagerAPI as energyManagerApi
+from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 
 if __name__ == "__main__":
     # create a new api object
-    api = energyManagerApi.EnergyManagerAPI()
+    api = EnergyManagerAPI()
     # set host or ip of energy manager device
     api.set_host('hostname or ip')
     # optional, change log level
