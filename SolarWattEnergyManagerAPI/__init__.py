@@ -1,2 +1,2 @@
-from SolarWattEnergyManagerAPI.EnergyManagerAPI import EnergyManagerAPI
+from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 

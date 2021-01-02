@@ -5,23 +5,24 @@ import logging
 class EnergyManagerAPI:
     API_PATH = "/rest/kiwigrid/wizard/devices"
 
-    def __init__(self, host: str, log_level=logging.WARNING):
-        # check params
-        if not host:
-            raise ValueError('Invalid host')
+    def __init__(self):
+        self.API_URL = ""
 
-        # init logging
+    @staticmethod
+    def set_log_level(log_level):
         if isinstance(log_level, str):
             numeric_level = getattr(logging, log_level.upper(), None)
             if not isinstance(numeric_level, int):
                 raise ValueError('Invalid log level: %s' % log_level)
+        if not (isinstance(log_level, int) or isinstance(log_level, str)):
+            raise ValueError('Invalid log level: %s' % log_level)
+
         logging.basicConfig(level=log_level)
 
-        self.HOST = host
-        self._buildUrl()
-
-    def _buildUrl(self):
-        self.API_URL = "http://" + self.HOST + self.API_PATH
+    def set_host(self, host: str):
+        if not host:
+            raise ValueError('Invalid host')
+        self.API_URL = "http://" + host + self.API_PATH
 
     def _call_API(self):
         try:
