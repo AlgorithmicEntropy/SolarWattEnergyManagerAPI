@@ -1,9 +1,11 @@
+import logging
+
 from unittest import TestCase
 from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 
 
 class TestEnergyManagerAPI(TestCase):
-    def test_EnergyManagerAPI(self):
+    def test_set_host(self):
         api = EnergyManagerAPI()
         with self.assertRaises(ValueError):
             api.set_host('')
@@ -13,6 +15,9 @@ class TestEnergyManagerAPI(TestCase):
             api.set_host('hostname')
         except ValueError:
             self.fail('set_host() raised unexpected ValueError')
+
+    def test_set_log_level(self):
+        api = EnergyManagerAPI()
         try:
             api.set_log_level('WARNING')
         except ValueError:
@@ -21,6 +26,13 @@ class TestEnergyManagerAPI(TestCase):
             api.set_log_level(10)
         except ValueError:
             self.fail('set_log_level(int) raised unexpected ValueError')
+
+    def test_set_logger(self):
+        api = EnergyManagerAPI()
+        try:
+            api.set_logger(logging.Logger)
+        except Exception as e:
+            self.fail(f'unexpected exception: {repr(e)}')
 
     def test_test_connection(self):
         # this test only works if you own a compatible device (change host below)

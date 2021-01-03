@@ -1,12 +1,14 @@
 import requests
 import logging
+import json
 
 
 class EnergyManagerAPI:
-    API_PATH = "/rest/kiwigrid/wizard/devices"
+    _API_PATH = "/rest/kiwigrid/wizard/devices"
+    _HEADERS = {'Accept': 'application/json'}
 
     def __init__(self):
-        self.API_URL = ""
+        self._API_URL = ""
 
     @staticmethod
     def set_log_level(log_level):
@@ -19,14 +21,18 @@ class EnergyManagerAPI:
 
         logging.basicConfig(level=log_level)
 
+    @staticmethod
+    def set_logger(logger):
+        logging.setLoggerClass(logger)
+
     def set_host(self, host: str):
         if not host:
             raise ValueError('Invalid host')
-        self.API_URL = "http://" + host + self.API_PATH
+        self._API_URL = "http://" + host + self._API_PATH
 
     def _call_API(self):
         try:
-            response = requests.get(self.API_URL)
+            response = requests.get(self._API_URL, headers=self._HEADERS)
             if response.status_code == 200:
                 return response.json()
             else:
@@ -34,11 +40,15 @@ class EnergyManagerAPI:
         except requests.exceptions.RequestException as e:
             logging.error("Failed to communicate with the energy manager API")
             logging.debug(f"HTTP Error code: {repr(e)}")
+        except json.decoder.JSONDecodeError as e:
+            logging.error("Failed to communicate with the energy manager API")
+            logging.debug(f"JSON decode error: {repr(e)}")
+        return None
 
     def test_connection(self):
         logging.info("Testing connection to energy manager")
         try:
-            response = requests.get(self.API_URL)
+            response = requests.get(self._API_URL, headers=self._HEADERS)
             if response.status_code == 200:
                 logging.info("Connected successfully to energy manager api")
                 return True
@@ -47,7 +57,7 @@ class EnergyManagerAPI:
                 logging.debug(f"HTTP Error code: {response.status_code}")
                 return False
 
-        except requests.exceptions.RequestException as e:
+        except (requests.exceptions.RequestException, json.decoder.JSONDecodeError) as e:
             logging.error("Failed to connect with the energy manager api")
             logging.debug(f"HTTP Error code: {repr(e)}")
             return False
@@ -62,18 +72,18 @@ class EnergyManagerAPI:
             item_4_val = items[4]['tagValues']
             item_1_val = items[2]['tagValues']
             return {
-                    "StateOfCharge": item_1_val['StateOfCharge']['value'],
-                    "PowerProduced": item_4_val['PowerProduced']['value'],
-                    "PowerConsumed": item_4_val['PowerConsumed']['value'],
-                    "PowerConsumedFromGrid": item_4_val['PowerConsumedFromGrid']['value'],
-                    "PowerConsumedFromStorage": item_4_val['PowerConsumedFromStorage']['value'],
-                    "PowerConsumedFromProducers": item_4_val['PowerConsumedFromProducers']['value'],
-                    "PowerOut": item_4_val['PowerOut']['value'],
-                    "PowerOutFromStorage": item_4_val['PowerOutFromStorage']['value'],
-                    "PowerBuffered": item_4_val['PowerBuffered']['value'],
-                    "PowerSelfSupplied": item_4_val['PowerSelfSupplied']['value'],
-                    "PowerSelfConsumed": item_4_val['PowerSelfConsumed']['value'],
-                    "PowerReleased": item_4_val['PowerReleased']['value'],
-                    "PowerBufferedFromGrid": item_4_val['PowerBufferedFromGrid']['value'],
-                    "PowerBufferedFromProducers": item_4_val['PowerBufferedFromProducers']['value']
+                    "energymanager.myreserve.charge": item_1_val['StateOfCharge']['value'],
+                    "energymanager.pv.power_produced": item_4_val['PowerProduced']['value'],
+                    "energymanager.sens.power_consumed": item_4_val['PowerConsumed']['value'],
+                    "energymanager.sens.power_consumed_grid": item_4_val['PowerConsumedFromGrid']['value'],
+                    "energymanager.sens.power_consumed_storage": item_4_val['PowerConsumedFromStorage']['value'],
+                    "energymanager.sens.power_consumed_producer": item_4_val['PowerConsumedFromProducers']['value'],
+                    "energymanager.sens.power_to_grid": item_4_val['PowerOut']['value'],
+                    "energymanager.myreserve.power_out": item_4_val['PowerOutFromStorage']['value'],
+                    "energymanager.myreserve.power_in": item_4_val['PowerBuffered']['value'],
+                    "energymanager.myreserve": item_4_val['PowerSelfSupplied']['value'],
+                    "energymanager.sens.power_self_consumed": item_4_val['PowerSelfConsumed']['value'],
+                    # "PowerReleased": item_4_val['PowerReleased']['value'], --> need to figure out meaning
+                    "energymanager.myreserve.power_in_grid": item_4_val['PowerBufferedFromGrid']['value'],
+                    "energymanager.myreserve.power_in_producers": item_4_val['PowerBufferedFromProducers']['value']
              }
