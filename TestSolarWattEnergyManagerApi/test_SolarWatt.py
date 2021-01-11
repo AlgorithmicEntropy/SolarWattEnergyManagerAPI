@@ -5,6 +5,9 @@ from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 
 
 class TestEnergyManagerAPI(TestCase):
+    # energy manager host
+    _HOST = 'energyManager'
+
     def test_set_host(self):
         api = EnergyManagerAPI()
         with self.assertRaises(ValueError):
@@ -12,7 +15,7 @@ class TestEnergyManagerAPI(TestCase):
         with self.assertRaises(ValueError):
             api.set_log_level('INVALID_LOG_LEVEL')
         try:
-            api.set_host('hostname')
+            api.set_host(self._HOST)
         except ValueError:
             self.fail('set_host() raised unexpected ValueError')
 
@@ -37,7 +40,7 @@ class TestEnergyManagerAPI(TestCase):
     def test_test_connection(self):
         # this test only works if you own a compatible device (change host below)
         api = EnergyManagerAPI()
-        api.set_host('energyManager')
+        api.set_host(self._HOST)
         try:
             if not api.test_connection():
                 self.fail('Connection to energy manager failed')
@@ -47,7 +50,7 @@ class TestEnergyManagerAPI(TestCase):
     def test_pull_data(self):
         # this test only works if you own a compatible device (change host below)
         api = EnergyManagerAPI()
-        api.set_host('energyManager')
+        api.set_host(self._HOST)
         try:
             result = api.pull_data()
             # print(result)
