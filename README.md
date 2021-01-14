@@ -11,7 +11,7 @@ pip install SolarWattEnergyManagerAPI
 
 ## Usage
 ```
-import SolarWattEnergyManagerAPI as energyManagerApi
+from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 
 # create a new api object
 api = EnergyManagerAPI()
