@@ -42,10 +42,11 @@ class TestEnergyManagerAPI(TestCase):
         api = EnergyManagerAPI()
         api.set_host(self._HOST)
         try:
-            if not api.test_connection():
-                self.fail('Connection to energy manager failed')
+            status, data = api.test_connection()
+            if not status:
+                self.fail(f'Connection to energy manager failed, error: {data}')
         except Exception as e:
-            self.fail(f'unexpected exception: {repr(e)}')
+            self.fail(f'Unexpected exception: {repr(e)}')
 
     def test_pull_data(self):
         # this test only works if you own a compatible device (change host below)

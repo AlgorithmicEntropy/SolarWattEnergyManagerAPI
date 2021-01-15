@@ -48,44 +48,51 @@ class EnergyManagerAPI:
     def test_connection(self):
         logging.info("Testing connection to energy manager")
         try:
-            response = requests.get(self._API_URL, headers=self._HEADERS)
-            if response.status_code == 200:
-                # try decode info
-                response.json()
+            response = self._call_API()
+            items = response['result']['items']
+            if items:
                 logging.info("Connected successfully to energy manager api")
-                return True
+                return True, response
             else:
                 logging.error("Failed to connect with the energy manager api")
                 logging.debug(f"HTTP Error code: {response.status_code}")
                 return False
+        except TypeError as e:
+            logging.error("Failed communication with api, no valid data returned")
+            return False, "No valid data returned"
 
-        except (requests.exceptions.RequestException, json.decoder.JSONDecodeError) as e:
+        except Exception as e:
             logging.error("Failed to connect with the energy manager api")
             logging.debug(f"HTTP Error code: {repr(e)}")
-            return False
+            return False, repr(e)
 
     def pull_data(self):
         api_response = self._call_API()
         if api_response:
-            items = api_response['result']['items']
-            # sort for consistency
-            items = sorted(items, key=lambda element: element['guid'])
-            # extract key sub components
-            item_4_val = items[4]['tagValues']
-            item_1_val = items[1]['tagValues']
-            return {
-                    "energymanager.myreserve.charge": item_1_val['StateOfCharge']['value'],
-                    "energymanager.pv.power_produced": item_4_val['PowerProduced']['value'],
-                    "energymanager.sens.power_consumed": item_4_val['PowerConsumed']['value'],
-                    "energymanager.sens.power_consumed_grid": item_4_val['PowerConsumedFromGrid']['value'],
-                    "energymanager.sens.power_consumed_storage": item_4_val['PowerConsumedFromStorage']['value'],
-                    "energymanager.sens.power_consumed_producer": item_4_val['PowerConsumedFromProducers']['value'],
-                    "energymanager.sens.power_to_grid": item_4_val['PowerOut']['value'],
-                    "energymanager.myreserve.power_out": item_4_val['PowerOutFromStorage']['value'],
-                    "energymanager.myreserve.power_in": item_4_val['PowerBuffered']['value'],
-                    "energymanager.myreserve.power_self": item_4_val['PowerSelfSupplied']['value'],
-                    "energymanager.sens.power_self_consumed": item_4_val['PowerSelfConsumed']['value'],
-                    # "PowerReleased": item_4_val['PowerReleased']['value'], --> need to figure out meaning
-                    "energymanager.myreserve.power_in_grid": item_4_val['PowerBufferedFromGrid']['value'],
-                    "energymanager.myreserve.power_in_producers": item_4_val['PowerBufferedFromProducers']['value']
-             }
+            # noinspection PyBroadException
+            try:
+                items = api_response['result']['items']
+                # sort for consistency
+                items = sorted(items, key=lambda element: element['guid'])
+                # extract key sub components
+                item_4_val = items[4]['tagValues']
+                item_1_val = items[1]['tagValues']
+                return {
+                        "energymanager.myreserve.charge": item_1_val['StateOfCharge']['value'],
+                        "energymanager.pv.power_produced": item_4_val['PowerProduced']['value'],
+                        "energymanager.sens.power_consumed": item_4_val['PowerConsumed']['value'],
+                        "energymanager.sens.power_consumed_grid": item_4_val['PowerConsumedFromGrid']['value'],
+                        "energymanager.sens.power_consumed_storage": item_4_val['PowerConsumedFromStorage']['value'],
+                        "energymanager.sens.power_consumed_producer": item_4_val['PowerConsumedFromProducers']['value'],
+                        "energymanager.sens.power_to_grid": item_4_val['PowerOut']['value'],
+                        "energymanager.myreserve.power_out": item_4_val['PowerOutFromStorage']['value'],
+                        "energymanager.myreserve.power_in": item_4_val['PowerBuffered']['value'],
+                        "energymanager.myreserve.power_self": item_4_val['PowerSelfSupplied']['value'],
+                        "energymanager.sens.power_self_consumed": item_4_val['PowerSelfConsumed']['value'],
+                        # "PowerReleased": item_4_val['PowerReleased']['value'], --> need to figure out meaning
+                        "energymanager.myreserve.power_in_grid": item_4_val['PowerBufferedFromGrid']['value'],
+                        "energymanager.myreserve.power_in_producers": item_4_val['PowerBufferedFromProducers']['value']
+                 }
+            except Exception as e:
+                logging.error("Failed to pull energy manager data")
+                return None

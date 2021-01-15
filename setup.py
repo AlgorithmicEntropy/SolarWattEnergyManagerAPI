@@ -17,7 +17,7 @@ setup(
   author = 'Sebastian Wallat',
   author_email = 'wallatsebastian@gmail.com',
   url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI',
-  download_url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_03.tar.gz',
+  download_url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_031.tar.gz',
   keywords = ['IOT', 'Solar', 'Local'],
   install_requires=[
           'requests',
