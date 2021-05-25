@@ -91,10 +91,14 @@ class EnergyManagerAPI:
                         "energymanager.myreserve.power_in": int(all_items['PowerBuffered']),
                         "energymanager.myreserve.power_self": int(all_items['PowerSelfSupplied']),
                         "energymanager.sens.power_self_consumed": int(all_items['PowerSelfConsumed']),
-                        # "PowerReleased": item_4_val['PowerReleased']['value'], --> need to figure out meaning
                         "energymanager.myreserve.power_in_grid": int(all_items['PowerBufferedFromGrid']),
-                        "energymanager.myreserve.power_in_producers": int(all_items['PowerBufferedFromProducers'])
-                 }
+                        "energymanager.myreserve.power_in_producers": int(all_items['PowerBufferedFromProducers']),
+                        "energymanager.device.mode": all_items['ModeConverter'],
+                        "energymanager.myreserve.health": float(all_items['StateOfHealth']),
+                        "energymanager.myreserve.temperature": int(all_items['TemperatureBattery']),
+                        "energymanager.device.load": float(all_items['FractionCPULoadAverageLastFiveMinutes']),
+
+                }
             except Exception as e:
                 logging.error("Failed to parse energy manager data")
                 logging.debug("Exception when parsing energy manager data: " + repr(e))
