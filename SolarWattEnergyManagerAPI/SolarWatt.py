@@ -72,27 +72,30 @@ class EnergyManagerAPI:
             # noinspection PyBroadException
             try:
                 items = api_response['result']['items']
-                # sort for consistency
-                items = sorted(items, key=lambda element: element['guid'])
-                # extract key sub components
-                item_4_val = items[4]['tagValues']
-                item_1_val = items[1]['tagValues']
+                # combine dicts into one with all relevant values
+                all_items = {}
+                for item in items:
+                    for tag in item['tagValues']:
+                        value = item['tagValues'][tag]['value']
+                        all_items[tag] = value
+
                 return {
-                        "energymanager.myreserve.charge": int(item_1_val['StateOfCharge']['value']),
-                        "energymanager.pv.power_produced": int(item_4_val['PowerProduced']['value']),
-                        "energymanager.sens.power_consumed": int(item_4_val['PowerConsumed']['value']),
-                        "energymanager.sens.power_consumed_grid": int(item_4_val['PowerConsumedFromGrid']['value']),
-                        "energymanager.sens.power_consumed_storage": int(item_4_val['PowerConsumedFromStorage']['value']),
-                        "energymanager.sens.power_consumed_producer": int(item_4_val['PowerConsumedFromProducers']['value']),
-                        "energymanager.sens.power_to_grid": int(item_4_val['PowerOut']['value']),
-                        "energymanager.myreserve.power_out": int(item_4_val['PowerOutFromStorage']['value']),
-                        "energymanager.myreserve.power_in": int(item_4_val['PowerBuffered']['value']),
-                        "energymanager.myreserve.power_self": int(item_4_val['PowerSelfSupplied']['value']),
-                        "energymanager.sens.power_self_consumed": int(item_4_val['PowerSelfConsumed']['value']),
+                        "energymanager.myreserve.charge": int(all_items['StateOfCharge']),
+                        "energymanager.pv.power_produced": int(all_items['PowerProduced']),
+                        "energymanager.sens.power_consumed": int(all_items['PowerConsumed']),
+                        "energymanager.sens.power_consumed_grid": int(all_items['PowerConsumedFromGrid']),
+                        "energymanager.sens.power_consumed_storage": int(all_items['PowerConsumedFromStorage']),
+                        "energymanager.sens.power_consumed_producer": int(all_items['PowerConsumedFromProducers']),
+                        "energymanager.sens.power_to_grid": int(all_items['PowerOut']),
+                        "energymanager.myreserve.power_out": int(all_items['PowerOutFromStorage']),
+                        "energymanager.myreserve.power_in": int(all_items['PowerBuffered']),
+                        "energymanager.myreserve.power_self": int(all_items['PowerSelfSupplied']),
+                        "energymanager.sens.power_self_consumed": int(all_items['PowerSelfConsumed']),
                         # "PowerReleased": item_4_val['PowerReleased']['value'], --> need to figure out meaning
-                        "energymanager.myreserve.power_in_grid": int(item_4_val['PowerBufferedFromGrid']['value']),
-                        "energymanager.myreserve.power_in_producers": int(item_4_val['PowerBufferedFromProducers']['value'])
+                        "energymanager.myreserve.power_in_grid": int(all_items['PowerBufferedFromGrid']),
+                        "energymanager.myreserve.power_in_producers": int(all_items['PowerBufferedFromProducers'])
                  }
             except Exception as e:
-                logging.error("Failed to pull energy manager data")
+                logging.error("Failed to parse energy manager data")
+                logging.debug("Exception when parsing energy manager data: " + repr(e))
                 return None
