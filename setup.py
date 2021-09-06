@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
   name = 'SolarWattEnergyManagerAPI',
   packages = ['SolarWattEnergyManagerAPI'],
-  version = '0.4',
+  version = '0.5',
   license='MIT',
   description = 'API wrapper for solar watt energy manager',
   long_description=long_description,
@@ -17,7 +17,7 @@ setup(
   author = 'Sebastian Wallat',
   author_email = 'wallatsebastian@gmail.com',
   url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI',
-  download_url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_04.tar.gz',
+  download_url = 'https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_05.tar.gz',
   keywords = ['IOT', 'Solar', 'Local'],
   install_requires=[
           'requests',
