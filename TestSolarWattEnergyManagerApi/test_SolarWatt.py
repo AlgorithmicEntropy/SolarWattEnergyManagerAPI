@@ -6,7 +6,7 @@ from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
 
 class TestEnergyManagerAPI(TestCase):
     # energy manager host
-    _HOST = 'energyManager'
+    _HOST = '172.16.1.246'
 
     def test_set_host(self):
         api = EnergyManagerAPI()

@@ -2,6 +2,8 @@ import requests
 import logging
 import json
 
+from SolarWattEnergyManagerAPI.units import WorkUnit
+
 
 class EnergyManagerAPI:
     _API_PATH = "/rest/kiwigrid/wizard/devices"
@@ -10,6 +12,7 @@ class EnergyManagerAPI:
 
     def __init__(self):
         self._API_URL = ""
+        self._unit = WorkUnit.kWh
         self._LOGGER = logging.getLogger(__name__)
 
     def set_log_level(self, log_level):
@@ -29,6 +32,9 @@ class EnergyManagerAPI:
         if not host:
             raise ValueError('Invalid host')
         self._API_URL = "http://" + host + self._API_PATH
+
+    def set_unit(self, unit: WorkUnit):
+        self._unit = unit
 
     def _call_API(self):
         try:
@@ -57,7 +63,7 @@ class EnergyManagerAPI:
                 logging.error("Failed to connect with the energy manager api")
                 logging.debug(f"HTTP Error code: {response.status_code}")
                 return False
-        except TypeError as e:
+        except TypeError:
             logging.error("Failed communication with api, no valid data returned")
             return False, "No valid data returned"
 
@@ -81,7 +87,7 @@ class EnergyManagerAPI:
 
                 # power values in W
                 # work in kWh
-                return {
+                result = {
                     "energymanager.myreserve.charge": int(all_items['StateOfCharge']),
                     "energymanager.pv.power_produced": int(all_items['PowerProduced']),
                     "energymanager.sens.power_consumed": int(all_items['PowerConsumed']),
@@ -99,25 +105,33 @@ class EnergyManagerAPI:
                     "energymanager.myreserve.health": float(all_items['StateOfHealth']),
                     "energymanager.myreserve.temperature": int(all_items['TemperatureBattery']),
                     "energymanager.device.load": float(all_items['FractionCPULoadAverageLastFiveMinutes']),
-                    "energymanager.price.profit_feed": int(all_items["PriceProfitFeedin"]) / 100 ,
+                    "energymanager.price.profit_feed": int(all_items["PriceProfitFeedin"]) / 100,
                     "energymanager.price.price_work_in": int(all_items["PriceWorkIn"]) / 100,
-                    "energymanager.work.self_consumed": int(all_items["WorkSelfConsumed"]) // 1000,
-                    "energymanager.work.self_supplied": int(all_items["WorkSelfSupplied"]) // 1000,
-                    "energymanager.work.consumed": int(all_items["WorkConsumed"]) // 1000,
-                    "energymanager.work.in": int(all_items["WorkIn"]) // 1000,
-                    "energymanager.work.consumed_from_grid": int(all_items["WorkConsumedFromGrid"]) // 1000,
-                    "energymanager.work.buffered_from_grid": int(all_items["WorkBufferedFromGrid"]) // 1000,
-                    "energymanager.work.buffered_from_producers": int(all_items["WorkBufferedFromProducers"]) // 1000,
-                    "energymanager.work.consumed_from_storage": int(all_items["WorkConsumedFromStorage"]) // 1000,
-                    "energymanager.work.out_from_storage": int(all_items["WorkOutFromStorage"]) // 1000,
-                    "energymanager.work.produced": int(all_items["WorkProduced"]) // 1000,
-                    "energymanager.work.buffered": int(all_items["WorkBuffered"]) // 1000,
-                    "energymanager.work.released": int(all_items["WorkReleased"]) // 1000,
-                    "energymanager.work.out_from_producers": int(all_items["WorkOutFromProducers"]) // 1000,
-                    "energymanager.work.consumed_from_producers": int(all_items["WorkConsumedFromProducers"]) // 1000,
-                    "energymanager.work.out": int(all_items["WorkOut"]) // 1000,
-
+                    "energymanager.work.self_consumed": int(all_items["WorkSelfConsumed"]),
+                    "energymanager.work.self_supplied": int(all_items["WorkSelfSupplied"]),
+                    "energymanager.work.consumed": int(all_items["WorkConsumed"]),
+                    "energymanager.work.in": int(all_items["WorkIn"]),
+                    "energymanager.work.consumed_from_grid": int(all_items["WorkConsumedFromGrid"]),
+                    "energymanager.work.buffered_from_grid": int(all_items["WorkBufferedFromGrid"]),
+                    "energymanager.work.buffered_from_producers": int(all_items["WorkBufferedFromProducers"]),
+                    "energymanager.work.consumed_from_storage": int(all_items["WorkConsumedFromStorage"]),
+                    "energymanager.work.out_from_storage": int(all_items["WorkOutFromStorage"]),
+                    "energymanager.work.produced": int(all_items["WorkProduced"]),
+                    "energymanager.work.buffered": int(all_items["WorkBuffered"]),
+                    "energymanager.work.released": int(all_items["WorkReleased"]),
+                    "energymanager.work.out_from_producers": int(all_items["WorkOutFromProducers"]),
+                    "energymanager.work.consumed_from_producers": int(all_items["WorkConsumedFromProducers"]),
+                    "energymanager.work.out": int(all_items["WorkOut"]),
                 }
+
+                # change power values to kWh if applicable
+                if self._unit == WorkUnit.kWh:
+                    for key in result:
+                        if 'energymanager.work' in key:
+                            result[key] = result[key] // 1000
+
+                return result
+
             except Exception as e:
                 logging.error("Failed to parse energy manager data")
                 logging.debug("Exception when parsing energy manager data: " + repr(e))
