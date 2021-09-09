@@ -128,7 +128,7 @@ class EnergyManagerAPI:
                 if self._unit == WorkUnit.kWh:
                     for key in result:
                         if 'energymanager.work' in key:
-                            result[key] = result[key] // 1000
+                            result[key] = result[key] / 1000
 
                 return result
 
