@@ -22,6 +22,10 @@ api.set_host('hostname or ip')
 # optional, change log level
 api.set_log_level('WARNING')
 
+# optional, change work units to Wh instead of kWh
+from SolarWattEnergyManagerAPI.units import WorkUnit
+api.set_unit(WorkUnit.Wh)
+
 # test the connection (returns bool based on success)
 result = api.test_connection()
 
