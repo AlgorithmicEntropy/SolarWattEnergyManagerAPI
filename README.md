@@ -1,4 +1,4 @@
-# SolarWattEnergyManagerAPI
+# LocalSolarWatt
 A python3 library to access the data of a solar watt energy manager
 
 This library returns the current power data of your solar array via the unofficial local api.
@@ -6,30 +6,27 @@ This library returns the current power data of your solar array via the unoffici
 ## Installation
 
 ```
-pip install SolarWattEnergyManagerAPI
+pip install LocalSolarWatt
 ```
 
 ## Usage
 ```
-from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
+from LocalSolarWatt import EnergyManager, WorkUnits
 
 # create a new api object
-api = EnergyManagerAPI()
+api = EnergyManager('hostname or ip')
 
-# set host or ip of energy manager device
-api.set_host('hostname or ip')
+# optional, change work units to Wh instead of kWh
+from SolarWattEnergyManagerAPI.units import WorkUnit
+api = EnergyManager('hostname or ip', work_unit=WorkUnits.Wh)
 
 # optional, change log level
 api.set_log_level('WARNING')
 
-# optional, change work units to Wh instead of kWh
-from SolarWattEnergyManagerAPI.units import WorkUnit
-api.set_unit(WorkUnit.Wh)
-
 # test the connection (returns bool based on success)
-result = api.test_connection()
+status, data = api.test_connection()
 
 # pull data from the device (retuirn dictionary with power values)
-data = api.pull_data()
+print(api.pull_data())
 ```
 

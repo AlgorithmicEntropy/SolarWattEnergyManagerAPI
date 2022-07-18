@@ -2,7 +2,7 @@ import requests
 import logging
 import json
 
-from SolarWattEnergyManagerAPI.units import WorkUnit
+from LocalSolarWatt.units import WorkUnits
 
 
 class EnergyManagerAPI:
@@ -10,10 +10,13 @@ class EnergyManagerAPI:
     _HEADERS = {'Accept': 'application/json'}
     _LOGGER = None
 
-    def __init__(self):
-        self._API_URL = ""
-        self._unit = WorkUnit.kWh
-        self._LOGGER = logging.getLogger(__name__)
+    def __init__(self, host: str, work_unit=WorkUnits.kWh, logger=None):
+        if not host:
+            raise ValueError('Invalid host')
+        self._API_URL = "http://" + host + self._API_PATH
+        if not logger:
+            self._LOGGER = logging.getLogger(__name__)
+        self._unit = work_unit
 
     def set_log_level(self, log_level):
         if isinstance(log_level, str):
@@ -24,17 +27,6 @@ class EnergyManagerAPI:
             raise ValueError('Invalid log level: %s' % log_level)
 
         self._LOGGER.setLevel(log_level)
-
-    def set_logger(self, logger):
-        self._LOGGER = logger
-
-    def set_host(self, host: str):
-        if not host:
-            raise ValueError('Invalid host')
-        self._API_URL = "http://" + host + self._API_PATH
-
-    def set_unit(self, unit: WorkUnit):
-        self._unit = unit
 
     def _call_API(self):
         try:
@@ -125,7 +117,7 @@ class EnergyManagerAPI:
                 }
 
                 # change power values to kWh if applicable
-                if self._unit == WorkUnit.kWh:
+                if self._unit == WorkUnits.kWh:
                     for key in result:
                         if 'energymanager.work' in key:
                             result[key] = result[key] / 1000

@@ -8,17 +8,16 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='SolarWattEnergyManagerAPI',
-    packages=['SolarWattEnergyManagerAPI'],
-    version='0.5.3',
+    name='LocalSolarWatt',
+    packages=['LocalSolarWatt'],
+    version='0.6',
     license='MIT',
-    description='API wrapper for solar watt energy manager',
+    description='python api wrapper for solar watt devices',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Sebastian Wallat',
-    author_email='wallatsebastian@gmail.com',
-    url='https://github.com/SebastianWallat/SolarWattEnergyManagerAPI',
-    download_url='https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_053.tar.gz',
+    author='AlgorithmicEntropy',
+    url='https://github.com/AlgorithmicEntropy/SolarWattEnergyManagerAPI',
+    download_url='https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_06.tar.gz',
     keywords=['IOT', 'Solar', 'Local'],
     install_requires=[
         'requests',
@@ -29,9 +28,6 @@ setup(
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.10',
     ],
 )
