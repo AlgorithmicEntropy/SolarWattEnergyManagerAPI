@@ -1,3 +1,6 @@
+# Important!
+Active development of this package moved to https://pypi.org/project/LocalSolarWatt/
+
 # SolarWattEnergyManagerAPI
 A python3 library to access the data of a solar watt energy manager
 
