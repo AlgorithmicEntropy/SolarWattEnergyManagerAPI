@@ -1,26 +1,25 @@
 import logging
+import os
 
 from unittest import TestCase
-from SolarWattEnergyManagerAPI.SolarWatt import EnergyManagerAPI
+from LocalSolarWatt import EnergyManager
 
 
 class TestEnergyManagerAPI(TestCase):
-    # energy manager host
-    _HOST = '172.16.1.246'
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._HOST = os.environ.get('ENERGY_MANAGER_HOST')
 
     def test_set_host(self):
-        api = EnergyManagerAPI()
         with self.assertRaises(ValueError):
-            api.set_host('')
-        with self.assertRaises(ValueError):
-            api.set_log_level('INVALID_LOG_LEVEL')
+            EnergyManager('')
         try:
-            api.set_host(self._HOST)
+            EnergyManager(self._HOST)
         except ValueError:
             self.fail('set_host() raised unexpected ValueError')
 
     def test_set_log_level(self):
-        api = EnergyManagerAPI()
+        api = EnergyManager(self._HOST)
         try:
             api.set_log_level('WARNING')
         except ValueError:
@@ -31,16 +30,14 @@ class TestEnergyManagerAPI(TestCase):
             self.fail('set_log_level(int) raised unexpected ValueError')
 
     def test_set_logger(self):
-        api = EnergyManagerAPI()
         try:
-            api.set_logger(logging.Logger)
+            EnergyManager(self._HOST, logger=logging.Logger)
         except Exception as e:
             self.fail(f'unexpected exception: {repr(e)}')
 
     def test_test_connection(self):
         # this test only works if you own a compatible device (change host below)
-        api = EnergyManagerAPI()
-        api.set_host(self._HOST)
+        api = EnergyManager(self._HOST)
         try:
             status, data = api.test_connection()
             if not status:
@@ -50,10 +47,9 @@ class TestEnergyManagerAPI(TestCase):
 
     def test_pull_data(self):
         # this test only works if you own a compatible device (change host below)
-        api = EnergyManagerAPI()
-        api.set_host(self._HOST)
+        api = EnergyManager(self._HOST)
         try:
             result = api.pull_data()
-            # print(result)
+            print(result)
         except Exception as e:
             self.fail(f'unexpected exception: {repr(e)}')

@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class WorkUnit(Enum):
+class WorkUnits(Enum):
     kWh = 1,
     Wh = 2
