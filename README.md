@@ -41,3 +41,10 @@ status, data = api.test_connection()
 print(api.pull_data())
 ```
 
+# Tests:
+If you want to run the tests locally make sure to set the following environment variables to correct IPs / hostnames
+```
+ENERGY_MANAGER_HOST
+MY_RESERVE_HOST
+```
+
