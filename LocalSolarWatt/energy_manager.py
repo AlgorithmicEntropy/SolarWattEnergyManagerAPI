@@ -65,7 +65,7 @@ class EnergyManagerApi(ApiClient):
                     "energymanager.device.mode": all_items['ModeConverter'],
                     "energymanager.myreserve.health": float(all_items['StateOfHealth']),
                     "energymanager.myreserve.temperature": int(all_items['TemperatureBattery']),
-                    "energymanager.device.load": float(all_items['FractionCPULoadAverageLastFiveMinutes']),
+                    "energymanager.device.load": float(all_items['FractionCPULoadTotal']),
                     "energymanager.price.profit_feed": int(all_items["PriceProfitFeedin"]) / 100,
                     "energymanager.price.price_work_in": int(all_items["PriceWorkIn"]) / 100,
                     "energymanager.work.self_consumed": int(all_items["WorkSelfConsumed"]),
@@ -96,4 +96,6 @@ class EnergyManagerApi(ApiClient):
             except Exception as e:
                 logging.error("Failed to parse energy manager data")
                 logging.debug("Exception when parsing energy manager data: " + repr(e))
+                if __debug__:
+                    raise e
                 return None
