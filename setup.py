@@ -10,14 +10,14 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='LocalSolarWatt',
     packages=['local_solar_watt'],
-    version='0.7',
+    version='0.7.1',
     license='MIT',
     description='python api wrapper for solar watt device api',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='AlgorithmicEntropy',
     url='https://github.com/AlgorithmicEntropy/SolarWattEnergyManagerAPI',
-    download_url='https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_070.tar.gz',
+    download_url='https://github.com/SebastianWallat/SolarWattEnergyManagerAPI/archive/v_071.tar.gz',
     keywords=['IOT', 'Solar', 'Local'],
     install_requires=[
         'requests',
