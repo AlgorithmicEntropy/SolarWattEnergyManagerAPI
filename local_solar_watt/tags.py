@@ -7,10 +7,13 @@ BATTERY = {
 }
 
 BATTERY_METER = {
+    "id_manufacturer": "IdManufacturer",
+    "id_firmware": "IdFirmware",
     "device_state": "StateDevice",
     "ac_power": "ACPower",
     "backup_state_of_charge": "BackupStateOfCharge",
     "battery_error": "BatteryError",
+    "state_error_list": "StateErrorList",
     "count_battery_modules": "CountBatteryModules",
     "current_battery_in": "CurrentBatteryIn",
     "current_battery_out": "CurrentBatteryOut",
@@ -19,7 +22,6 @@ BATTERY_METER = {
     "mode_converter": "ModeConverter",
     "power_ac_in": "PowerACIn",
     "power_ac_out": "PowerACOut",
-    "power_request_wanted": "PowerRequestWanted",
     "power_yield_sum": "PowerYieldSum",
     "state_of_charge": "StateOfCharge",
     "state_of_health": "StateOfHealth",
@@ -38,6 +40,8 @@ BATTERY_METER = {
 }
 
 INVERTER = {
+    "id_manufacturer": "IdManufacturer",
+    "id_firmware": "IdFirmware",
     "device_state": "StateDevice",
     "state_error_list": "StateErrorList",
     "ac_power": "ACPower",

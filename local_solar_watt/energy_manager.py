@@ -49,14 +49,17 @@ class EnergyManagerApi(ApiClient):
         """Extract relevant values from device"""
         data = {}
         for key, val in fields.items():
-            # change power values to kWh if applicable
-            if 'work' in key and self._unit == WorkUnits.kWh:
-                value = device.values[val]
-                if value:
-                    value = value / 1000
-                data[key] = value
-            else:
-                data[key] = device.values[val]
+            try:
+                # change power values to kWh if applicable
+                if 'work' in key and self._unit == WorkUnits.kWh:
+                    value = device.values[val]
+                    if value:
+                        value = value / 1000
+                    data[key] = value
+                else:
+                    data[key] = device.values[val]
+            except KeyError:
+                logging.error(f"Failed to extract data value for {key}")
         return data
 
     def pull_data(self):
