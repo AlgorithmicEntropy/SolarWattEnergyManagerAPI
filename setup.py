@@ -17,7 +17,7 @@ setup(
     long_description_content_type='text/markdown',
     author='AlgorithmicEntropy',
     url='https://github.com/AlgorithmicEntropy/SolarWattEnergyManagerAPI',
-    download_url='https://github.com/AlgorithmicEntropy/SolarWattEnergyManagerAPI/archive/v_071.tar.gz',
+    download_url='https://github.com/AlgorithmicEntropy/SolarWattEnergyManagerAPI/archive/v_080.tar.gz',
     keywords=['IOT', 'Solar', 'Local'],
     install_requires=[
         'requests',
