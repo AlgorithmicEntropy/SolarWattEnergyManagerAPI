@@ -1,2 +1,2 @@
 from .api import EnergyManagerApi
-from .const import DeviceClass, WorkUnits
+from .const import DeviceClass, WorkUnits, EnergyManagerVersion

@@ -1,5 +1,5 @@
-from local_solar_watt import DeviceClass
 from local_solar_watt.base.base_handler import BaseHandler, EnergyData
+from local_solar_watt.const import DeviceClass
 from local_solar_watt.openhab import Item
 
 

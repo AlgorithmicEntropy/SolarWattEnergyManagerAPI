@@ -1,12 +1,24 @@
 from unittest import TestCase
 
 from local_solar_watt import DeviceClass
+from local_solar_watt import EnergyManagerApi, EnergyManagerVersion, WorkUnits
 from local_solar_watt.clients import MockClient
 from local_solar_watt.handlers import EmClassic
 from local_solar_watt.handlers.flex import EmFlex
 
 
 class TestClassicApi(TestCase):
+    def test_imports(self):
+        api = EnergyManagerApi(EnergyManagerVersion.CLASSIC, "")
+        api = EnergyManagerApi(EnergyManagerVersion.FLEX, "")
+        api = EnergyManagerApi(EnergyManagerVersion.CLASSIC, "", work_unit=WorkUnits.Wh)
+
+    # def test_online(self):
+    #    api = EnergyManagerApi(EnergyManagerVersion.CLASSIC, "172.16.1.246")
+    #    assert api.test_connection()
+    #    data = api.fetch_data()
+    #    assert data[DeviceClass.BATTERY][0]['device_state']
+
     def test_parsing_classic(self):
         client = MockClient('tests/data/energy_manager_classic.json')
         handler = EmClassic()

@@ -4,15 +4,16 @@ from local_solar_watt.clients import RestClient
 from local_solar_watt.const import EnergyManagerVersion as EmV
 from local_solar_watt.const import WorkUnits
 from local_solar_watt.handlers import EmClassic
+from local_solar_watt.handlers.flex import EmFlex
 
 API_PATHS = {
     EmV.CLASSIC: "/rest/kiwigrid/wizard/devices",
-    EmV.FLEX: ""
+    EmV.FLEX: "/rest/items"
 }
 
 DATA_PARSERS = {
     EmV.CLASSIC: EmClassic,
-    EmV.FLEX: None
+    EmV.FLEX: EmFlex
 }
 
 
