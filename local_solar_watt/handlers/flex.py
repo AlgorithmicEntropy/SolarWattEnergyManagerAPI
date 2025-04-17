@@ -1,3 +1,6 @@
+from collections import defaultdict
+from typing import Dict, List
+
 from local_solar_watt.base.base_handler import BaseHandler, EnergyData
 from local_solar_watt.const import DeviceClass
 from local_solar_watt.openhab import Item
@@ -35,27 +38,22 @@ class EmFlex(BaseHandler):
             self._logger.warning(f"Unknown device class for device: {device}")
             return DeviceClass.UNKNOWN
 
-    def parse(self, d: dict) -> EnergyData:
-        # parse into to list of items
-        items = []
-        for e in d:
-            items.append(Item.from_json(e))
-        # Get unique devices
-        devices = set()
-        for item in items:
-            devices.add(f"{item.ha_entity.device}_{item.ha_entity.id}")
-        # Group items by device
-        grouped_items = {}
-        for item in items:
-            device = f"{item.ha_entity.device}_{item.ha_entity.id}"
-            if device not in grouped_items:
-                grouped_items[device] = []
-            grouped_items[device].append(item)
-        # map device classes
-        mapped_devices = {}
-        for device, items in grouped_items.items():
-            mapped = self._map_device_class(items[0].ha_entity.device)
-            if mapped not in mapped_devices:
-                mapped_devices[mapped] = []
-            mapped_devices[mapped].append(items)
+    def parse(self, raw_items: dict) -> EnergyData:
+        # Deserialize and build per‑device dicts
+        grouped: Dict[str, Dict[str, Item]] = defaultdict(dict)
+        for raw in raw_items:
+            item = Item.from_json(raw)
+            # device bucket for all entities belonging to the same device+id
+            device_key = f"{item.ha_entity.device}_{item.ha_entity.id}"
+            # unique key for each individual entity/item
+            item_key = f"{item.ha_entity.device}_{item.ha_entity.id}_{item.ha_entity.entity}"
+            grouped[device_key][item_key] = item
+
+        # Bucket device dicts by *mapped* device class
+        mapped_devices: Dict[DeviceClass, List[Dict[str, Item]]] = defaultdict(list)
+        for device_dict in grouped.values():
+            # Peek at any item to discover the mapping key for this whole device
+            any_item = next(iter(device_dict.values()))
+            mapped_key = self._map_device_class(any_item.ha_entity.device)
+            mapped_devices[mapped_key].append(device_dict)
         return mapped_devices
