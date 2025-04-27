@@ -57,7 +57,9 @@ status = api.test_connection()
 print(api.fetch_data())
 ```
 
-# Tests:
+# Development:
+
+Project uses uv for dependency management.
 
 Rudimentary unit tests are included in the `tests` folder.
 These use static data from j́son files and do not require a connection to the device.
