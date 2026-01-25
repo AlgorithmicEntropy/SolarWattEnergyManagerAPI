@@ -43,7 +43,7 @@ class RestClient(BaseClient):
             logging.debug(f"JSON decode error: {repr(e)}")
         return None
 
-    def test_connection(self):
+    def test_connection(self) -> bool:
         logging.info("Testing connection to energy manager")
         try:
             response = self.fetch_data_json()
@@ -55,7 +55,7 @@ class RestClient(BaseClient):
                 return False
         except TypeError:
             logging.error("Failed communication with api, no valid data returned")
-            return False, "No valid data returned"
+            return False
 
         except Exception as e:
             logging.error("Failed to connect with the energy manager api")

@@ -22,7 +22,7 @@ class EnergyManagerApi:
         self._logger = logger if logger else logging.getLogger(__name__)
         api_path = API_PATHS[version]
         self._client = RestClient(host, api_path, self._logger)
-        self._handler = DATA_PARSERS[version](self._logger)
+        self._handler = DATA_PARSERS[version](logger=self._logger, work_unit=work_unit)
         self._version = version
         self._unit = work_unit
 

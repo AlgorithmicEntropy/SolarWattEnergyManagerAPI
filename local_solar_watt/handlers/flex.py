@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Dict, List
 
 from local_solar_watt.base.base_handler import BaseHandler, EnergyData
-from local_solar_watt.const import DeviceClass
+from local_solar_watt.const import DeviceClass, WorkUnits
 from local_solar_watt.openhab import Item
 
 
@@ -11,12 +11,12 @@ class EmFlex(BaseHandler):
     Data parser for the (old) style of the energy manager.
     """
 
-    def __init__(self, logger=None):
+    def __init__(self, work_unit=WorkUnits.kWh, logger=None):
         """
         Initialize the EnergyManager handler.
         :param logger: Optional logger instance.
         """
-        super().__init__(logger)
+        super().__init__(logger=logger, work_unit=work_unit)
 
     def _map_device_class(self, device: str) -> DeviceClass:
         """

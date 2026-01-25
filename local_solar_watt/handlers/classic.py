@@ -7,12 +7,12 @@ class EmClassic(BaseHandler):
     Data parser for the (old) style of the energy manager.
     """
 
-    def __init__(self, logger=None):
+    def __init__(self, work_unit=WorkUnits.kWh, logger=None):
         """
         Initialize the EnergyManager handler.
         :param logger: Optional logger instance.
         """
-        super().__init__(logger)
+        super().__init__(logger=logger, work_unit=work_unit)
 
     def parse(self, d: dict) -> EnergyData:
         # noinspection PyBroadException
